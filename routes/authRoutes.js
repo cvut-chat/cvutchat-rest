@@ -1,6 +1,5 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
 const dataServiceUrl = 'http://data/api';
@@ -22,8 +21,9 @@ router.post('/login', async (req, res) => {
   try {
     const response = await axios.get(`${dataServiceUrl}/user/${req.body.username}`);
     if (await bcrypt.compare(req.body.password, response.data.password)) {
-      const token = jwt.sign({ username: response.data.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({ message: "Login successful", token: token });
+        const tokenResponse = await axios.post('http://auth/api/generateToken', { username: req.body.username });
+        const token = tokenResponse.data.token;
+        res.json({ message: "Login successful", token: token });
     } else {
       res.status(400).json({ message: "Invalid credentials" });
     }
