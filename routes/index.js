@@ -1,4 +1,4 @@
-import authRoutes from './authRoutes';
-import protectedRoutes from './protectedRoutes';
+const authRoutes = require('./authRoutes');
+const protectedRoutes = require('./protectedRoutes');
 
-export { authRoutes, protectedRoutes };
+module.exports = { authRoutes, protectedRoutes };
