@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const axios = require('axios');
 const { authRoutes, protectedRoutes } = require("./routes");
 
 // app.use(cors());
@@ -9,7 +10,7 @@ app.use(express.json());
 const validateTokeWithAuthService = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    const response = await axios.get('http://auth/verifyToken', {
+    const response = await axios.get('http://auth/api/verifyToken', {
       headers: {
         Authorization: token
       }
@@ -20,6 +21,7 @@ const validateTokeWithAuthService = async (req, res, next) => {
       res.status(401).send('Unauthorized');
     }
   } catch (error) {
+    console.error("Error during token verification:", error.response ? error.response.data : error.message);
     res.status(401).send('Unauthorized');
   }
 };

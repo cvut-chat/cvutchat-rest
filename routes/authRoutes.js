@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
   try {
     const response = await axios.get(`${dataServiceUrl}/user/${req.body.username}`);
     if (await bcrypt.compare(req.body.password, response.data.password)) {
-        const tokenResponse = await axios.post('http://auth/api/generateToken', { username: req.body.username });
+        const tokenResponse = await axios.post('http://auth/api/generateToken', { _id: response.data._id });
         const token = tokenResponse.data.token;
         res.json({ message: "Login successful", token: token });
     } else {
