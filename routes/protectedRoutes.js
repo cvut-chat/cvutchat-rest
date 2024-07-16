@@ -25,6 +25,15 @@ router.get('/users/me', asyncHandler(async (req, res) => {
   res.json(response.data);
 }));
 
+router.get('/rooms', asyncHandler(async (req, res) => {
+  // const token = req.headers.authorization;
+  let data = {
+    name: "room1",
+    users: ["user1", "user2"]
+  };
+  res.json(data);
+}));
+
 // GET /rooms get list of rooms
 // POST /rooms create a new room
 // GET /rooms/:id get messages history of a room
