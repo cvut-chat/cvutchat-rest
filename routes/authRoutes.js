@@ -32,4 +32,13 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/checkId/:id', async (req, res) => {
+  try {
+    const response = await axios.get(`${dataServiceUrl}/user/${req.params.id}`);
+    res.json(response.data);
+  } catch (err) {
+    res.status(err.response?.status || 500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
