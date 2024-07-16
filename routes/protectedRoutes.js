@@ -34,6 +34,33 @@ router.get('/rooms', asyncHandler(async (req, res) => {
   res.json(data);
 }));
 
+router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+
+  const messages = [
+    {
+      _id: 'message1',
+      from: 'user1',
+      room: roomId,
+      content: 'Hello, how are you?',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: 'message2',
+      from: 'user2',
+      room: roomId,
+      content: 'I am good, thank you!',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+  ];
+
+  res.status(200).json(messages);
+}));
+
+
+
 // GET /rooms get list of rooms
 // POST /rooms create a new room
 // GET /rooms/:id get messages history of a room
