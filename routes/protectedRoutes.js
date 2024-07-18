@@ -90,7 +90,7 @@ router.post('/rooms', asyncHandler(async (req, res) => {
       Authorization: token
     }
   });
-  res.status(200).json(response.data);
+  res.status(201).json(response.data);
 }));
 
 router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
