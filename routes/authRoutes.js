@@ -10,7 +10,10 @@ router.post('/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const response = await axios.post(`${dataServiceUrl}/users`, { ...req.body, password: hashedPassword });
-    res.status(201).json({ message: "User created successfully", user: { username: response.data.username } });
+    res.status(201).json({
+      message: "User created successfully",
+      user: { _id: response.data._id, username: response.data.username } });
+      
   } catch (err) {
     res.status(err.response?.status || 500).json({ message: err.message });
   }

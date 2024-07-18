@@ -27,10 +27,10 @@ router.get('/users/me', asyncHandler(async (req, res) => {
 }));
 
 // /users, get a batch of users
-router.get('/users/:userId', asyncHandler(async (req, res) => {
+router.get('/users/:usersId', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
-  let userId = req.params.userId;
-  const response = await axios.get(`http://data/api/users/${userId}`, {
+  let usersId = req.params.usersId;
+  const response = await axios.get(`http://data/api/users/${usersId}`, {
     headers: {
       Authorization: token
     }
