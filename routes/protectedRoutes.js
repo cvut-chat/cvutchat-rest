@@ -90,14 +90,24 @@ router.post('/rooms', asyncHandler(async (req, res) => {
 
 router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
   const { roomId } = req.params;
-  const { dataToSend } = req.body;
+  const { data } = req.body;
   const token = req.headers.authorization;
-  const response = await axios.post(`http://data/api/rooms/${roomId}/messages/send`, dataToSend, {
-    headers: {
-      Authorization: token
-    }
-  });
-  res.status(200).json(response);
+    const responseSocket = await axios.post(`http://socket/api/rooms/${roomId}/messages/send`, data, {
+      headers: {
+        Authorization: token
+      }
+    });
+    const response = await axios.post(`http://data/api/rooms/${roomId}/messages/send`, data, {
+      headers: {
+        Authorization: token
+      }
+    });
+
+  if (responseSocket.status === 200 && response.status === 200) {
+    res.status(200).json({success: true});
+  } else {
+    res.status(200).json({success: false});
+  }
 }));
 
 // GET /rooms get list of rooms
