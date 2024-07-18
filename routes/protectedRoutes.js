@@ -1,14 +1,16 @@
+// TODO Use then catch everywere
 const router = require('express').Router();
 const asyncHandler = require('express-async-handler');
 const axios = require('axios');
 
+// GET /weather get weather
 router.get('/weather', asyncHandler(async (req, res) => {
   const { location } = req.query;
   const response = await axios.get(`http://weather/weather?location=${location}`);
   res.status(200).json(response.data);
 }));
 
-// /users/me get the current user
+// POST /users create a new user
 router.get('/users/me', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = await axios.get('http://auth/api/verifyToken', {
@@ -26,7 +28,8 @@ router.get('/users/me', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
-// /users, get a batch of users
+// GET /users/:usersId get users by id
+// TODO Wont work with multiple ids for now
 router.get('/users/:usersId', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
   let usersId = req.params.usersId;
@@ -38,7 +41,18 @@ router.get('/users/:usersId', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
-// TODO Use then catch everywere
+// POST /rooms create a new room
+router.post('/rooms', asyncHandler(async (req, res) => {
+  const token = req.headers.authorization;
+  const response = await axios.post('http://data/api/rooms', req.body, {
+    headers: {
+      Authorization: token
+    }
+  });
+  res.status(201).json(response.data);
+}));
+
+// GET /rooms get list of rooms
 router.get('/rooms', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
   let response = axios.get('http://data/api/rooms', {
@@ -52,47 +66,7 @@ router.get('/rooms', asyncHandler(async (req, res) => {
   });
 }));
 
-router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
-  const { roomId } = req.params;
-  const token = req.headers.authorization;
-  const response = await axios.get(`http://data/api/rooms/${roomId}/messages`, {
-    headers: {
-      Authorization: token
-    }
-  });
-
-  // const data = [
-  //   {
-  //     _id: 'message1',
-  //     from: 'user1',
-  //     room: roomId,
-  //     content: 'Hello, how are you?',
-  //     createdAt: new Date().toISOString(),
-  //     updatedAt: new Date().toISOString(),
-  //   },
-  //   {
-  //     _id: 'message2',
-  //     from: 'user2',
-  //     room: roomId,
-  //     content: 'I am good, thank you!',
-  //     createdAt: new Date().toISOString(),
-  //     updatedAt: new Date().toISOString(),
-  //   }
-  // ];
-
-  res.status(200).json(response.data);
-}));
-
-router.post('/rooms', asyncHandler(async (req, res) => {
-  const token = req.headers.authorization;
-  const response = await axios.post('http://data/api/rooms', req.body, {
-    headers: {
-      Authorization: token
-    }
-  });
-  res.status(201).json(response.data);
-}));
-
+// TODO POST /rooms/:roomId/messages/send send a message to a room
 router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
   const { roomId } = req.params;
   const { data } = req.body;
@@ -115,10 +89,18 @@ router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
   }
 }));
 
-// GET /rooms get list of rooms
-// POST /rooms create a new room
-// GET /rooms/:id get messages history of a room
-// POST /rooms/:id send a message to a room
+// TODO GET /rooms/:roomId/messages get messages history of a room
+router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+  const token = req.headers.authorization;
+  const response = await axios.get(`http://data/api/rooms/${roomId}/messages`, {
+    headers: {
+      Authorization: token
+    }
+  });
+
+  res.status(200).json(response.data);
+}));
 
 
 module.exports = router;
