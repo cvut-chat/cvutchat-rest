@@ -5,58 +5,75 @@ const axios = require('axios');
 router.get('/weather', asyncHandler(async (req, res) => {
   const { location } = req.query;
   const response = await axios.get(`http://weather/weather?location=${location}`);
-  res.json(response.data);
+  res.status(200).json(response.data);
 }));
 
 // /users, get a batch of users
-router.get('/users', asyncHandler(async (req, res) => {
-  const response = await axios.get('http://users/users');
-  res.json(response.data);
+router.get('/users/:userId', asyncHandler(async (req, res) => {
+  const token = req.headers.authorization;
+  let userId = req.params.userId;
+  const response = await axios.get(`http://data/api/users/${userId}`, {
+    headers: {
+      Authorization: token
+    }
+  });
+  res.status(200).json(response.data);
 }));
 
 // /users/me get the current user
 router.get('/users/me', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
-  const response = await axios.get('http://auth/me', {
+  const response = await axios.get(`http://data/api/users/me/${token}`, {
     headers: {
       Authorization: token
     }
   });
-  res.json(response.data);
+  res.status(200).json(response.data);
 }));
 
 router.get('/rooms', asyncHandler(async (req, res) => {
-  // const token = req.headers.authorization;
-  let data = {
-    name: "room1",
-    users: ["user1", "user2"]
-  };
-  res.json(data);
+  const token = req.headers.authorization;
+  let response = axios.get('http://data/api/rooms', {
+    headers: {
+      Authorization: token
+    }
+  });
+  // let data = {
+  //   name: "room1",
+  //   users: ["user1", "user2"]
+  // };
+  res.status(200).json(response.data);
 }));
 
 router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
   const { roomId } = req.params;
-
-  const messages = [
-    {
-      _id: 'message1',
-      from: 'user1',
-      room: roomId,
-      content: 'Hello, how are you?',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      _id: 'message2',
-      from: 'user2',
-      room: roomId,
-      content: 'I am good, thank you!',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+  const token = req.headers.authorization;
+  const response = await axios.get(`http://data/api/rooms/${roomId}/messages`, {
+    headers: {
+      Authorization: token
     }
-  ];
+  });
 
-  res.status(200).json(messages);
+  // const data = [
+  //   {
+  //     _id: 'message1',
+  //     from: 'user1',
+  //     room: roomId,
+  //     content: 'Hello, how are you?',
+  //     createdAt: new Date().toISOString(),
+  //     updatedAt: new Date().toISOString(),
+  //   },
+  //   {
+  //     _id: 'message2',
+  //     from: 'user2',
+  //     room: roomId,
+  //     content: 'I am good, thank you!',
+  //     createdAt: new Date().toISOString(),
+  //     updatedAt: new Date().toISOString(),
+  //   }
+  // ];
+
+  res.status(200).json(response.data);
 }));
 
 
