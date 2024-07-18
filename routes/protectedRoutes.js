@@ -22,8 +22,9 @@ router.get('/users/:userId', asyncHandler(async (req, res) => {
 
 // /users/me get the current user
 router.get('/users/me', asyncHandler(async (req, res) => {
+  // TODO Fix, need to get id from token
   const token = req.headers.authorization;
-  const response = await axios.get(`http://data/api/users/me/${token}`, {
+  const response = await axios.get(`http://data/api/users/${_id}`, {
     headers: {
       Authorization: token
     }
