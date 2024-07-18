@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
 const axios = require('axios');
+const cors = require('cors');
 const { authRoutes, protectedRoutes } = require("./routes");
 
 // app.use(cors());
 app.use(express.json());
+app.use(cors())
 
 // TODO Merge auth service with rest to get rid of this
 const validateTokeWithAuthService = async (req, res, next) => {
