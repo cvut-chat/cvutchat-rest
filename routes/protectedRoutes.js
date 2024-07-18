@@ -76,7 +76,28 @@ router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
+router.post('/rooms', asyncHandler(async (req, res) => {
+  const { rooms } = req.body;
+  const token = req.headers.authorization;
+  const response = await axios.get(`http://data/api/rooms/${rooms}`, {
+    headers: {
+      Authorization: token
+    }
+  });
+  res.status(200).json(response);
+}));
 
+router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+  const { dataToSend } = req.body;
+  const token = req.headers.authorization;
+  const response = await axios.post(`http://data/api/rooms/${roomId}/messages/send`, dataToSend, {
+    headers: {
+      Authorization: token
+    }
+  });
+  res.status(200).json(response);
+}));
 
 // GET /rooms get list of rooms
 // POST /rooms create a new room
