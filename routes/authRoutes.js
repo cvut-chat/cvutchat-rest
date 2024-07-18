@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const response = await axios.post(`${dataServiceUrl}/user`, { ...req.body, password: hashedPassword });
+    const response = await axios.post(`${dataServiceUrl}/users`, { ...req.body, password: hashedPassword });
     res.status(201).json({ message: "User created successfully", user: { username: response.data.username } });
   } catch (err) {
     res.status(err.response?.status || 500).json({ message: err.message });
@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
 // Login Route
 router.post('/login', async (req, res) => {
   try {
-    const response = await axios.get(`${dataServiceUrl}/user/${req.body.username}`);
+    const response = await axios.get(`${dataServiceUrl}/users/${req.body.username}`);
     if (await bcrypt.compare(req.body.password, response.data.password)) {
         const tokenResponse = await axios.post('http://auth/api/generateToken', { _id: response.data._id });
         const token = tokenResponse.data.token;
@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/checkId/:id', async (req, res) => {
   try {
-    const response = await axios.get(`${dataServiceUrl}/user/${req.params.id}`);
+    const response = await axios.get(`${dataServiceUrl}/users/${req.params.id}`);
     res.json(response.data);
   } catch (err) {
     res.status(err.response?.status || 500).json({ message: err.message });

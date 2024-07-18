@@ -22,6 +22,8 @@ router.get('/users/:userId', asyncHandler(async (req, res) => {
 
 // /users/me get the current user
 router.get('/users/me', asyncHandler(async (req, res) => {
+  console.log("AAAA");
+  // TODO Fix error 404
   const token = req.headers.authorization;
   const user = await axios.get('http://auth/api/verifyToken', {
     headers: {
