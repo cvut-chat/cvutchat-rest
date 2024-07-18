@@ -38,19 +38,18 @@ router.get('/users/:usersId', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
-
+// TODO Use then catch everywere
 router.get('/rooms', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
   let response = axios.get('http://data/api/rooms', {
     headers: {
       Authorization: token
     }
+  }).then(response => {
+    res.status(200).json(response.data);
+  }).catch(error => {
+    res.status(400).json({ message: error.message });
   });
-  // let data = {
-  //   name: "room1",
-  //   users: ["user1", "user2"]
-  // };
-  res.status(200).json(response.data);
 }));
 
 router.get('/rooms/:roomId/messages', asyncHandler(async (req, res) => {
