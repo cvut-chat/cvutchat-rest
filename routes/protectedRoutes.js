@@ -8,6 +8,24 @@ router.get('/weather', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
+// /users/me get the current user
+router.get('/users/me', asyncHandler(async (req, res) => {
+  const token = req.headers.authorization;
+  const decodedToken = await axios.get('http://auth/api/verifyToken', {
+    headers: {
+      Authorization: token
+    }
+  });
+  const id = decodedToken.data.user.id;
+  // TODO No need for token since we already verified it
+  const response = await axios.get(`http://data/api/users/${id}`, {
+    headers: {
+      Authorization: token
+    }
+  });
+  res.status(200).json(response.data);
+}));
+
 // /users, get a batch of users
 router.get('/users/:userId', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
@@ -20,25 +38,6 @@ router.get('/users/:userId', asyncHandler(async (req, res) => {
   res.status(200).json(response.data);
 }));
 
-// /users/me get the current user
-router.get('/users/me', asyncHandler(async (req, res) => {
-  console.log("AAAA");
-  // TODO Fix error 404
-  const token = req.headers.authorization;
-  const user = await axios.get('http://auth/api/verifyToken', {
-    headers: {
-      Authorization: token
-    }
-  }).data.user;
-  const _id = user._id;
-  // TODO No need for token since we already verified it
-  const response = await axios.get(`http://data/api/users/${_id}`, {
-    headers: {
-      Authorization: token
-    }
-  });
-  res.status(200).json(response.data);
-}));
 
 router.get('/rooms', asyncHandler(async (req, res) => {
   const token = req.headers.authorization;
