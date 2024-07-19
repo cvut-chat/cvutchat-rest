@@ -69,7 +69,7 @@ router.get('/rooms', asyncHandler(async (req, res) => {
 // TODO POST /rooms/:roomId/messages/send send a message to a room
 router.post('/rooms/:roomId/messages/send', asyncHandler(async (req, res) => {
   const { roomId } = req.params;
-  const { data } = req.body;
+  const data = req.body;
   const token = req.headers.authorization;
     const responseSocket = await axios.post(`http://socket/api/rooms/${roomId}/messages/send`, data, {
       headers: {
